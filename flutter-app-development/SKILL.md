@@ -48,6 +48,10 @@ provided, use the defaults below and state them briefly.
   keep `flutter analyze` clean. Add tests for behavior, not implementation details.
 - **Responsive UI:** design for phones first, then handle larger widths, text
   scaling, safe areas, keyboard insets, orientation, and accessibility semantics.
+- **Configuration & localization:** keep environment values (base URLs, feature
+  flags) out of Dart source via `--dart-define`/`--dart-define-from-file`, and route
+  user-facing strings through a localization mechanism for anything beyond a
+  throwaway prototype, since retrofitting i18n later touches every screen.
 
 ## Core workflow
 
@@ -58,16 +62,18 @@ provided, use the defaults below and state them briefly.
    [references/project-setup.md](references/project-setup.md). For an existing app,
    preserve its structure unless it prevents the requested change.
 3. **Model data flow.** Define domain models and repository boundaries before
-   connecting UI to a remote API or local database. Represent loading, errors, and
-   retry behavior explicitly. Read
+   connecting UI to a remote API or local database. Read
    [references/state-management.md](references/state-management.md) when adding or
    changing state.
-4. **Build the UI as composable widgets.** Keep build methods readable, extract
-   widgets around meaningful behavior, use theme values instead of repeated magic
-   numbers/colors, and provide semantics and useful labels for interactive controls.
+4. **Build the UI as composable widgets.** Keep build methods readable and extract
+   widgets around meaningful behavior, so the tree stays testable and cheap to
+   rebuild. When a screen janks, rebuilds too often, or renders large lists, read
+   [references/performance.md](references/performance.md).
 5. **Implement navigation and platform behavior.** Handle back navigation, deep links,
    authentication redirects, permissions, keyboard/focus behavior, and lifecycle
-   changes deliberately. Never assume iOS and Android behave identically.
+   changes deliberately. Never assume iOS and Android behave identically. Read
+   [references/platform-release.md](references/platform-release.md) when configuring
+   flavors/environments, permissions, localization, or preparing a release build.
 6. **Test the important paths.** Read [references/testing.md](references/testing.md)
    and add focused unit/widget/integration tests appropriate to the change.
 7. **Validate before finishing.** Run, as applicable:
@@ -75,6 +81,7 @@ provided, use the defaults below and state them briefly.
    ```bash
    flutter pub get
    dart format --output=none --set-exit-if-changed .
+   dart fix --dry-run   # then `dart fix --apply` for mechanical lint fixes
    flutter analyze
    flutter test
    ```
@@ -93,6 +100,8 @@ Read only the references relevant to the current task:
 | Create a project, choose structure, configure theme or navigation | [project-setup.md](references/project-setup.md) |
 | Add or change state, async flows, repositories, or dependency injection | [state-management.md](references/state-management.md) |
 | Add unit, widget, golden, or integration tests | [testing.md](references/testing.md) |
+| Configure flavors/environments, permissions, localization, app identity, or a release build | [platform-release.md](references/platform-release.md) |
+| Diagnose jank, excessive rebuilds, slow lists, or frame drops | [performance.md](references/performance.md) |
 
 ## Non-negotiable implementation rules
 
