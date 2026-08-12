@@ -2,7 +2,8 @@
 
 - review-team : taken from https://github.com/cline/skills
 - skill-creator : taken from https://github.com/cline/skills
-- flutter-app-development : created with the help of the `skill-creator` instructions
+- flutter-app-development : Develop Flutter apps (for mobiles)
+- ai-history-video-snippets : Produce short-form, AI-generated "time-travel vlog" videos
 
 ## Install
 
