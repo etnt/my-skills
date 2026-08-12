@@ -20,8 +20,11 @@ prompts, edit notes) and, when tools are available, the assets themselves.
    character reference sheet / base photo that keeps the host identical in every
    shot.
 3. **Video layer (Seedance 2.0 / Higgsfield / Kling / PAI Pro):** the anchor photo
-   plus an era-specific prompt generates 3–5 second selfie-style or walk-and-talk
-   clips with the character's identity preserved.
+   (registered as a named @Character element in Kling) plus a per-clip
+   story-board prompt generates 3–5 second selfie-style or walk-and-talk clips
+   with the character's identity preserved. Prompts use a five-block structure
+   (camera/action, environment, lighting, native audio dialogue, soundscape);
+   long narration lines become Custom Multi-Shot scripts.
 4. **Voice & audio layer (ElevenLabs):** a cloned/consistent voice for the modern
    commentary, plus period-accurate ambient sound (market chatter, horse hooves,
    ancient languages) layered underneath for immersion.
@@ -73,19 +76,56 @@ prompts, edit notes) and, when tools are available, the assets themselves.
 - Hook in the first 1–2 seconds: the host mid-situation ("So I'm in Pompeii and
   the mountain is doing something weird...").
 
-### 3. Generate the video clips
+### 3. Generate the video clips (story-board prompts)
 
 - Feed the anchor photo into the video engine (Seedance 2.0, Higgsfield, Kling,
-  PAI Pro) as the identity reference.
-- Prompt each 3–5 second clip with three blocks:
-  1. **Camera/framing:** "9:16 vertical smartphone video, handheld selfie-style
-     video, low-angle walk-and-talk, talking directly into the camera lens."
-  2. **Performance:** "micro-gestures, natural eye blinking, subtle head tilting,
-     realistic camera shake."
-  3. **World:** "background filled with [era, e.g. Ancient Rome marketplace],
-     historically accurate architecture, period costumes on background extras."
-- Keep the character's modern outfit description verbatim in every clip prompt.
+  PAI Pro) as the identity reference. In Kling, register the anchor as a named
+  character element and reference it with its exact tag (e.g. `@Reginald`) in
+  every prompt — once the tag is used, never re-describe core features (age,
+  face, hair); describe only actions, clothing state, and lighting on the
+  character.
+- Write **one story-board file per clip** (`story-board/clip-XX.txt`), using
+  five structured blocks — this block syntax stops the model from confusing
+  camera directions with environment or dialogue:
+
+  ```
+  [Camera & Action]: Shot type + camera movement; @Character's exact action,
+  gaze direction, framing, and micro-expressions (end with "natural lip sync,
+  subtle eye blinking ... as he/she speaks").
+  [Environment]: Background elements and their moving parts (crowds, smoke,
+  wind, banners), period-accurate, with proximity to camera.
+  [Lighting & Atmosphere]: Time of day, light quality/temperature, emotional
+  tension of the beat.
+  [Native Audio Dialogue]: @Character + delivery direction (tone, pacing,
+  volume) + the clip's narration line VERBATIM, in quotation marks.
+  [Background Soundscape]: 3–4 diegetic audio layers separated by commas —
+  no music, no whooshes.
+  ```
+
+- **One shot = 3–5 seconds max.** Speech runs ~2–3 words per second, so a
+  narration line longer than ~12 words will not fit a single shot — build a
+  **Custom Multi-Shot** script (`story-board/clip-XX-multishot.txt`) instead:
+  - Split the line at natural sentence breaks into sequential quoted strings,
+    one per shot; never reword or reorder the script.
+  - Tag @Character in the `[Camera & Action]` of EVERY shot where the character
+    is visible or audible. For cutaway shots (camera turned to the scene), use
+    the off-screen form: "@Character's voice continues over the clip as an
+    off-screen voiceover, whispering close to the microphone: "..."" — and keep
+    a piece of the character in frame (sleeve/hand at the frame edge).
+  - Keep environment, lighting, and soundscape continuous across the shots so
+    the cut reads as one unbroken take; A–B–A (face → cutaway → face) works
+    well for irony beats.
+  - Kling dashboard: Multi-Shot → Custom Multi-Shot → paste each shot's blocks
+    into its own numbered window → set per-shot duration sliders (3–5s) →
+    Native Audio master switch ON → Generate.
+- Keep the character's modern outfit description verbatim in every prompt
+  (or in the @Character element definition); keep era detail in the world.
 - Generate a few takes per clip; pick the ones with the most stable face.
+- **Two voice paths — pick one per video:** (a) native in-generation dialogue
+  via `[Native Audio Dialogue]` (lip-synced, simplest, voice may vary between
+  generations), or (b) generate silent performances and lay the cloned
+  ElevenLabs voice over them in the edit (best cross-episode voice
+  consistency). Never mix both in the same clip.
 
 ### 4. Voice and sound
 
@@ -109,9 +149,14 @@ prompts, edit notes) and, when tools are available, the assets themselves.
 2. `script.md` — chosen formula, narration lines, fact list with sources.
 3. `shotlist.md` — table: clip #, narration line, full video prompt (camera +
    performance + world blocks), duration, take notes.
-4. `audio-notes.md` — voice settings, ambient layers per clip, background dialogue.
-5. `edit-notes.md` — cut pacing, caption style, shake/grade notes, export settings.
-6. `publish.md` — title, description, hashtags, platform notes.
+4. `story-board/clip-XX.txt` — one generation-ready prompt per clip in the
+   five-block format ([Camera & Action] / [Environment] / [Lighting &
+   Atmosphere] / [Native Audio Dialogue] / [Background Soundscape]), with
+   `clip-XX-multishot.txt` Custom Multi-Shot variants for lines too long for
+   a single 3–5s shot.
+5. `audio-notes.md` — voice settings, ambient layers per clip, background dialogue.
+6. `edit-notes.md` — cut pacing, caption style, shake/grade notes, export settings.
+7. `publish.md` — title, description, hashtags, platform notes.
 
 ## Guardrails
 
