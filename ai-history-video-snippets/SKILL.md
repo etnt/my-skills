@@ -24,7 +24,8 @@ prompts, edit notes) and, when tools are available, the assets themselves.
    story-board prompt generates 3–5 second selfie-style or walk-and-talk clips
    with the character's identity preserved. Prompts use a five-block structure
    (camera/action, environment, lighting, native audio dialogue, soundscape);
-   long narration lines become Custom Multi-Shot scripts.
+   clips default to Custom Multi-Shot scripts (multi-shot reads as markedly
+   more realistic), with single-shot prompts only for very short lines.
 4. **Voice & audio layer (ElevenLabs):** a cloned/consistent voice for the modern
    commentary, plus period-accurate ambient sound (market chatter, horse hooves,
    ancient languages) layered underneath for immersion.
@@ -97,14 +98,32 @@ prompts, edit notes) and, when tools are available, the assets themselves.
   [Lighting & Atmosphere]: Time of day, light quality/temperature, emotional
   tension of the beat.
   [Native Audio Dialogue]: @Character + delivery direction (tone, pacing,
-  volume) + the clip's narration line VERBATIM, in quotation marks.
+  volume) + a voice-quality anchor (see below) + the clip's narration
+  line VERBATIM, in quotation marks.
   [Background Soundscape]: 3–4 diegetic audio layers separated by commas —
   no music, no whooshes.
   ```
 
-- **One shot = 3–5 seconds max.** Speech runs ~2–3 words per second, so a
-  narration line longer than ~12 words will not fit a single shot — build a
-  **Custom Multi-Shot** script (`story-board/clip-XX-multishot.txt`) instead:
+- **Voice-quality anchor (prevents metallic/raspy voices):** Kling's native
+  audio tends to render elderly, whispered, or "gravelly" voices with
+  metallic digital artifacts. Mitigate by appending the SAME voice-quality
+  anchor to EVERY `[Native Audio Dialogue]` line in every clip:
+  "in a deep warm natural elderly male voice, close studio condenser
+  microphone, rich organic tone, cinematic acoustic clarity, smooth clean
+  vocals, never metallic or raspy". Adapt the voice description to the
+  character but keep the structure: (1) voice character, (2) recording-quality
+  anchor (studio microphone, acoustic clarity), (3) explicit negatives
+  ("never metallic or raspy"). Also avoid stacking texture cues
+  ("gravelly" + "raspy" + "whisper") — one delivery cue only; if a clip
+  still comes out metallic, soften "whispers" to "speaks very quietly" and
+  re-roll (audio quality varies between seeds with identical prompts).
+- **Prefer multi-shot whenever possible.** Custom Multi-Shot clips read as
+  noticeably more realistic than one static selfie take — the cut itself is
+  the realism cue. Default to building a **Custom Multi-Shot** script
+  (`story-board/clip-XX-multishot.txt`) for every clip; reserve single-shot
+  prompts only for very short clips (one short sentence). One shot =
+  3–5 seconds max; speech runs ~2–3 words per second, so split the narration
+  line at natural sentence breaks across the shots:
   - Split the line at natural sentence breaks into sequential quoted strings,
     one per shot; never reword or reorder the script.
   - Tag @Character in the `[Camera & Action]` of EVERY shot where the character
@@ -149,11 +168,12 @@ prompts, edit notes) and, when tools are available, the assets themselves.
 2. `script.md` — chosen formula, narration lines, fact list with sources.
 3. `shotlist.md` — table: clip #, narration line, full video prompt (camera +
    performance + world blocks), duration, take notes.
-4. `story-board/clip-XX.txt` — one generation-ready prompt per clip in the
-   five-block format ([Camera & Action] / [Environment] / [Lighting &
-   Atmosphere] / [Native Audio Dialogue] / [Background Soundscape]), with
-   `clip-XX-multishot.txt` Custom Multi-Shot variants for lines too long for
-   a single 3–5s shot.
+4. `story-board/clip-XX-multishot.txt` — one generation-ready Custom
+   Multi-Shot script per clip (the default; multi-shot is more realistic),
+   plus `clip-XX.txt` single-shot fallbacks in the five-block format
+   ([Camera & Action] / [Environment] / [Lighting & Atmosphere] / [Native
+   Audio Dialogue] / [Background Soundscape]). Every dialogue line carries
+   the voice-quality anchor against metallic/raspy synthesis.
 5. `audio-notes.md` — voice settings, ambient layers per clip, background dialogue.
 6. `edit-notes.md` — cut pacing, caption style, shake/grade notes, export settings.
 7. `publish.md` — title, description, hashtags, platform notes.
