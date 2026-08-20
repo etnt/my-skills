@@ -1,0 +1,23 @@
+{
+  "skill_name": "ai-fictive-story-films",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I wrote this piece of flash fiction and want to turn it into a short cinematic AI film. Give me everything I need to produce it in Kling.\n\n\"The lighthouse keeper's daughter kept a jar of stolen light on her windowsill. Every night she let a little of it out to guide the boats her father could no longer see. On the night the storm took the last of it, she opened the jar all the way — and the coast has been dark ever since.\"",
+      "expected_output": "A faithful adaptation package: a synopsis and beat list that preserve the plot, characters (the daughter, the blind father), setting, and the somber ending; a character anchor definition per character; a shot-broken screenplay; per-clip Kling storyboard prompts defaulting to Custom Multi-Shot in the five-block format; audio notes with diegetic ambience only and no music score; 16:9 cinematic edit notes; and publish metadata. Should not invent a new plot or change the ending.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "Adapt this writing-prompt scene into a 60-second AI short with two characters talking, narrator-driven with an ElevenLabs voice: 'A tired waitress at a 3am diner realizes the only customer is the man from the missing-person poster taped to the window.' Keep it faithful and cinematic.",
+      "expected_output": "Two character anchors (the waitress, the man) each with a verbatim description and Kling @tag, a shot-broken screenplay with a narrator voiceover approach (near-silent performances, ElevenLabs voice laid over in edit), Custom Multi-Shot storyboard prompts, diegetic 3am-diner ambience with no music, and 16:9 cinematic edit notes.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Write me the Kling multi-shot prompts for the opening scene of a short film adapted from a fable where a fox convinces a crow to drop its cheese. Keep the fox and crow consistent across shots.",
+      "expected_output": "A set of Custom Multi-Shot storyboard prompts in the five-block structure for the opening scene, with the fox and crow each registered as a named @Character element and tagged in the [Camera & Action] of every shot they appear in, continuous environment/lighting/soundscape across shots, native dialogue carrying the voice-quality anchor, and no music in the soundscape.",
+      "files": []
+    }
+  ]
+}
