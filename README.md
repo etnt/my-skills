@@ -5,6 +5,7 @@
 - flutter-app-development : Develop Flutter apps (for mobiles)
 - ai-history-video-snippets : Produce short-form, AI-generated "time-travel vlog" videos
 - ai-fictive-story-films : Adapt short text material into cinematic AI fiction films (Kling)
+- create-implementation-plan : taken from https://github.com/github/awesome-copilot
 
 ## Install
 
