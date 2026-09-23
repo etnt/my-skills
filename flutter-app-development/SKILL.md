@@ -102,6 +102,54 @@ Read only the references relevant to the current task:
 | Add unit, widget, golden, or integration tests | [testing.md](references/testing.md) |
 | Configure flavors/environments, permissions, localization, app identity, or a release build | [platform-release.md](references/platform-release.md) |
 | Diagnose jank, excessive rebuilds, slow lists, or frame drops | [performance.md](references/performance.md) |
+| Show a version badge in the UI or set up tag-driven GitHub releases | [platform-release.md](references/platform-release.md) |
+
+## App version badge and tag-driven releases
+
+When building or extending an app, show the version number in small print next to
+the app name in the AppBar title, and wire up a GitHub Actions release workflow
+triggered by pushing a version tag (pattern proven in the `skyoverhead` app; full
+copy-paste examples in [references/platform-release.md](references/platform-release.md)):
+
+1. **Inject the version at build time.** Put a single constant in a config file
+   (e.g. `lib/src/config/app_version.dart`). Never hardcode a version string:
+
+   ```dart
+   /// App version injected at build time via `--dart-define=APP_VERSION=...`.
+   /// Falls back to 'dev' for local/debug builds.
+   const appVersion = String.fromEnvironment('APP_VERSION', defaultValue: 'dev');
+   ```
+
+2. **Show it as small print beside the app name** in the AppBar title:
+
+   ```dart
+   appBar: AppBar(
+     title: const Text.rich(
+       TextSpan(
+         text: '<App Name>',
+         children: [
+           TextSpan(
+             text: '  $appVersion',
+             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+           ),
+         ],
+       ),
+     ),
+     ...
+   )
+   ```
+
+3. **Add a tag-triggered release workflow** at `.github/workflows/release.yml`:
+   trigger on pushed `v*` tags (plus `workflow_dispatch`), run analyze and tests,
+   build release APKs (split-per-ABI plus a universal APK) with
+   `--dart-define=APP_VERSION=${{ github.ref_name }}` so the git tag becomes the
+   displayed version, and publish the artifacts with `softprops/action-gh-release@v2`.
+   Signing material (keystore/`key.properties`) must come from repository secrets,
+   never be committed.
+
+4. **Cut a release by pushing a tag:** `git tag v1.0.0 && git push origin v1.0.0`.
+   The workflow builds and publishes automatically; `github.ref_name` flows into
+   the badge with no manual version edits.
 
 ## Non-negotiable implementation rules
 
