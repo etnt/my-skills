@@ -1,6 +1,6 @@
 ---
 name: flutter-app-development
-description: "Build, extend, and maintain production-quality Flutter mobile applications with Dart. Covers project setup, feature-first architecture, Material 3 UI, navigation, responsive layouts, Riverpod state management, repositories and API integration, platform configuration, testing, debugging, and release preparation. TRIGGER when the user asks to create or modify a Flutter app, mentions Flutter or Dart UI/mobile code, has a pubspec.yaml with a Flutter dependency, or asks for an iOS and Android app using Flutter. ALSO trigger for Flutter-specific build, widget, navigation, state, or testing problems. SKIP for React Native, native Swift/UIKit/SwiftUI, native Android/Kotlin/Compose, pure Dart CLI/server packages, or backend-only work unless the request also includes a Flutter client."
+description: "Build, extend, and maintain production-quality Flutter apps for Android, iOS, and Web. Covers setup, architecture, Material 3 UI, navigation, responsive layouts, Riverpod, repositories, networking, platform configuration, browser APIs, PWAs, testing, debugging, and releases. TRIGGER when the user asks to create or modify a Flutter app, mentions Flutter or Dart UI, mobile, or Web code, has a pubspec.yaml with Flutter, or asks for an iOS, Android, or Web app using Flutter. ALSO trigger for Flutter build, widget, navigation, state, PWA, or Web CORS problems. SKIP for React Native, native Swift/Android, pure Dart CLI/server packages, or backend-only work unless the task also includes a Flutter client."
 ---
 
 # Flutter application development
@@ -17,8 +17,8 @@ Before writing code, inspect:
 
 - `pubspec.yaml` and `pubspec.lock` for the Flutter/Dart SDK constraint, dependencies,
   scripts, and existing state-management, routing, networking, and testing choices.
-- `lib/`, `test/`, `integration_test/`, `android/`, `ios/`, and any flavor or build
-  configuration directories.
+- `lib/`, `test/`, `integration_test/`, `android/`, `ios/`, and `web/` when
+  present. Inspect relevant build and deployment workflows as well.
 - `analysis_options.yaml`, generated-code configuration, and existing test commands.
 - Git status and the current app entry point (`lib/main.dart` or its equivalent).
 
@@ -74,6 +74,8 @@ provided, use the defaults below and state them briefly.
    changes deliberately. Never assume iOS and Android behave identically. Read
    [references/platform-release.md](references/platform-release.md) when configuring
    flavors/environments, permissions, localization, or preparing a release build.
+   For Web or PWA work, also read
+   [references/web-pwa.md](references/web-pwa.md).
 6. **Test the important paths.** Read [references/testing.md](references/testing.md)
    and add focused unit/widget/integration tests appropriate to the change.
 7. **Validate before finishing.** Run, as applicable:
@@ -91,6 +93,12 @@ provided, use the defaults below and state them briefly.
    changed, validate the affected iOS/Android build path as well. Report commands
    that could not run and why; do not claim a build is verified when it was not run.
 
+   For a Web target, also run `flutter build web --release` with the production
+   `--base-href` and `--dart-define` values. Serve the release output at the
+   configured path over HTTPS and smoke-test that hosted path in a browser.
+   A debug `flutter run -d chrome` does not verify the release manifest, PWA
+   installation, or project-site base path.
+
 ## Reference routing
 
 Read only the references relevant to the current task:
@@ -101,6 +109,7 @@ Read only the references relevant to the current task:
 | Add or change state, async flows, repositories, or dependency injection | [state-management.md](references/state-management.md) |
 | Add unit, widget, golden, or integration tests | [testing.md](references/testing.md) |
 | Configure flavors/environments, permissions, localization, app identity, or a release build | [platform-release.md](references/platform-release.md) |
+| Build a Flutter Web/PWA, diagnose CORS, or deploy to Pages | [web-pwa.md](references/web-pwa.md) |
 | Diagnose jank, excessive rebuilds, slow lists, or frame drops | [performance.md](references/performance.md) |
 | Show a version badge in the UI or set up tag-driven GitHub releases | [platform-release.md](references/platform-release.md) |
 
@@ -172,6 +181,11 @@ copy-paste examples in [references/platform-release.md](references/platform-rele
   command instead of editing generated output by hand.
 - When adding a package, explain why it is needed, use a version compatible with
   the SDK constraint, and avoid adding overlapping libraries for the same concern.
+- Do not import `dart:io` into libraries that compile for Web. Use conditional
+  imports when native code needs IO-only types or error handling.
+- Do not disable browser security or use an unrestricted public proxy in
+  production. Keep any server proxy limited to known hosts, paths, methods, and
+  allowed origins.
 
 ## Definition of done
 
